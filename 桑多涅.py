@@ -319,15 +319,27 @@ def set_background(image_file):
         -webkit-text-fill-color: #4A3428 !important;
     }}
 
-    /* ============ 底部聊天输入框 ============ */
+        /* ============ 底部聊天输入框 ============ */
+    /* 最外层：去掉深蓝底，改成浅棕 */
     [data-testid="stBottom"] > div,
     [data-testid="stBottomBlockContainer"] {{
-        background-color: #EADBC8 !important;
-        border-radius: 10px !important;
+        background-color: #F5EDE4 !important;
+        border: 2px solid #4A3428 !important;
+        border-radius: 14px !important;
+        box-shadow: none !important;
     }}
+
+    /* 内层容器：同样浅棕，避免深蓝漏出来 */
+    [data-testid="stBottomBlockContainer"] > div,
+    [data-testid="stBottom"] .stChatInput {{
+        background-color: #F5EDE4 !important;
+        border-radius: 12px !important;
+    }}
+
+    /* 输入框本体 */
     [data-testid="stChatInput"] {{
         background-color: #F5EDE4 !important;
-        border-radius: 10px !important;
+        border-radius: 12px !important;
     }}
     [data-testid="stChatInputTextArea"] {{
         color: #4A3428 !important;
@@ -339,6 +351,24 @@ def set_background(image_file):
         color: #A9744F !important;
         -webkit-text-fill-color: #A9744F !important;
         opacity: 1 !important;
+    }}
+
+    /* 发送按钮（纸飞机）也换成棕色系 */
+    [data-testid="stChatInput"] button {{
+        background-color: #EADBC8 !important;
+        border: 1px solid #A9744F !important;
+        border-radius: 8px !important;
+    }}
+    [data-testid="stChatInput"] button:hover {{
+        background-color: #A9744F !important;
+    }}
+    [data-testid="stChatInput"] button svg {{
+        fill: #4A3428 !important;
+        color: #4A3428 !important;
+    }}
+    [data-testid="stChatInput"] button:hover svg {{
+        fill: #F5EDE4 !important;
+        color: #F5EDE4 !important;
     }}
     </style>
     """, unsafe_allow_html=True)
