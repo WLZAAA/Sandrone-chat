@@ -84,14 +84,35 @@ def set_background(image_file):
     }}
 
     /* ============ 侧边栏 ============ */
-        /* 侧边栏 API Key 输入框 */
+            /* 侧边栏 API Key 输入框（含 focus 状态） */
     [data-testid="stSidebar"] input[type="password"],
-    [data-testid="stSidebar"] input[type="text"] {{
+    [data-testid="stSidebar"] input[type="text"],
+    [data-testid="stSidebar"] input[type="password"]:focus,
+    [data-testid="stSidebar"] input[type="text"]:focus,
+    [data-testid="stSidebar"] input[type="password"]:active,
+    [data-testid="stSidebar"] input[type="text"]:active {{
         background-color: #4A3428 !important;
         color: #F5EDE4 !important;
         -webkit-text-fill-color: #F5EDE4 !important;
         border: 1px solid #A9744F !important;
         border-radius: 8px !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }}
+
+    /* 输入框外层容器也不要变蓝 */
+    [data-testid="stSidebar"] [data-baseweb="input"],
+    [data-testid="stSidebar"] [data-baseweb="base-input"] {{
+        background-color: #4A3428 !important;
+        border-color: #A9744F !important;
+        border-radius: 8px !important;
+    }}
+
+    /* 眼睛图标 SVG 强制浅色 */
+    [data-testid="stSidebar"] input[type="password"] ~ div svg,
+    [data-testid="stSidebar"] [data-baseweb="input"] button svg {{
+        fill: #F5EDE4 !important;
+        color: #F5EDE4 !important;
     }}
 
     /* 侧边栏成功/警告提示 —— 改成内联小标签 */
@@ -401,6 +422,24 @@ def set_background(image_file):
         fill: #F5EDE4 !important;
         color: #F5EDE4 !important;
     }}
+        /* st.dialog 弹窗内容文字强制深棕 */
+    [data-testid="stDialog"] p,
+    [data-testid="stDialog"] span,
+    [data-testid="stDialog"] div,
+    [data-testid="stDialog"] label,
+    [data-testid="stDialog"] h1,
+    [data-testid="stDialog"] h2,
+    [data-testid="stDialog"] h3 {{
+        color: #4A3428 !important;
+        -webkit-text-fill-color: #4A3428 !important;
+    }}
+
+    /* 弹窗背景 */
+    [data-testid="stDialog"] > div {{
+        background-color: #F5EDE4 !important;
+        border: 2px solid #A9744F !important;
+        border-radius: 16px !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -511,10 +550,35 @@ with st.sidebar:
         help="Key 仅用于当前会话，不会保存"
     )
 
+    # 用 session_state 记住验证是否通过
+    if "api_key_valid" not in st.session_state:
+        st.session_state.api_key_valid = False
+
     if user_api_key:
-        st.caption("✓ API Key 已设置")
+        if st.button("验证 Key", use_container_width=True, key="verify_key"):
+            try:
+                test_client = OpenAI(
+                    api_key=user_api_key,
+                    base_url="https://api.deepseek.com"
+                )
+                test_client.chat.completions.create(
+                    model="deepseek-flash",
+                    messages=[{"role": "user", "content": "hi"}],
+                    max_tokens=1
+                )
+                st.session_state.api_key_valid = True
+                st.session_state.verified_key = user_api_key
+                st.caption("✓ Key 验证通过")
+            except Exception:
+                st.session_state.api_key_valid = False
+                st.caption("✗ Key 无效，请检查后重试")
+
+        if st.session_state.api_key_valid and st.session_state.get("verified_key") == user_api_key:
+            st.caption("✓ API Key 已设置")
+        elif not st.session_state.api_key_valid:
+            st.caption("⚠ 请点击上方按钮验证 Key")
     else:
-        st.caption("⚠ 请先输入 API Key 才能开始对话")
+        st.caption("⚠ 请先输入 API Key")
 
 
     if st.button("开启新对话", icon = "➕️",width = "stretch"):
@@ -560,8 +624,8 @@ for message in st.session_state["messages"]:
     else:
         st.chat_message("assistant", avatar = "resources/桑多涅头像1.png").write(message["content"])
 
-if not user_api_key:
-    st.info("👈 请在左侧输入你的 DeepSeek API Key 后开始对话")
+if not user_api_key or not st.session_state.get("api_key_valid") or st.session_state.get("verified_key") != user_api_key:
+    st.info("👈 请在左侧输入你的 DeepSeek API Key，并点击「验证 Key」通过后开始对话")
     st.stop()
 
 client = OpenAI(
