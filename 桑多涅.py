@@ -387,8 +387,6 @@ if "current_session" not in st.session_state:
 with st.sidebar:
     st.image("resources/木偶.jpg", width=1600)
     with st.popover("角色介绍", width = "stretch"):
-        with st.popover("角色PV", width = "stretch"):
-            st.video("resources/桑多涅角色PV.mp4", width=1080)
         st.write("愚人众第七席“木偶”桑多涅，是阿兰为纪念亡妹创造的机械生命。")
         st.write("她外冷内热，毒舌傲娇，珍视与哥伦比娅、阿蕾奇诺等人的茶会情谊。")
         st.write("在博士之战中，她以自身为术式核心牺牲，从被创造的木偶蜕变为拥有自主意志之人。")
@@ -425,7 +423,7 @@ with st.sidebar:
         api_key=user_api_key,
         base_url="https://api.deepseek.com"
     )
-    
+
     if st.button("开启新对话", icon = "➕️",width = "stretch"):
         if st.session_state.messages:
             save_session()
