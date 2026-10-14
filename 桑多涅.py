@@ -308,7 +308,7 @@ def set_background(image_file):
     """, unsafe_allow_html=True)
 
 
-set_background("resources\木偶背景.jpg")
+set_background("resources/木偶背景.jpg")
 
 
 
