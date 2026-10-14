@@ -312,9 +312,9 @@ set_background("resources/木偶背景.jpg")
 
 
 
-client = OpenAI(
-    api_key=os.environ.get('DEEPSEEK_API_KEY'),
-    base_url="https://api.deepseek.com")
+# client = OpenAI(
+#     api_key=os.environ.get('DEEPSEEK_API_KEY'),
+#     base_url="https://api.deepseek.com")
 
 st.set_page_config(
     page_title = "桑多涅",
@@ -392,6 +392,40 @@ with st.sidebar:
         st.write("愚人众第七席“木偶”桑多涅，是阿兰为纪念亡妹创造的机械生命。")
         st.write("她外冷内热，毒舌傲娇，珍视与哥伦比娅、阿蕾奇诺等人的茶会情谊。")
         st.write("在博士之战中，她以自身为术式核心牺牲，从被创造的木偶蜕变为拥有自主意志之人。")
+
+    st.divider()
+    st.subheader("🔑 API 设置")
+
+    with st.popover("📖 使用说明", use_container_width=True):
+        st.markdown("""
+        **如何获取 API Key？**
+
+        1. 访问 [platform.deepseek.com](https://platform.deepseek.com)
+        2. 注册/登录账号
+        3. 在左侧菜单找到 **API Keys**
+        4. 点击 **创建 API Key**
+        5. 复制生成的 Key（以 `sk-` 开头）
+        6. 粘贴到下方的输入框
+
+        ⚠️ 你的 Key 只用于本次会话，不会被保存
+        """)
+
+    user_api_key = st.text_input(
+        "请输入你的 DeepSeek API Key",
+        type="password",
+        placeholder="sk-...",
+        help="Key 仅用于当前会话，不会保存"
+    )
+
+    if not user_api_key:
+        st.warning("请先输入 API Key 才能开始对话")
+        st.stop()
+
+    client = OpenAI(
+        api_key=user_api_key,
+        base_url="https://api.deepseek.com"
+    )
+    
     if st.button("开启新对话", icon = "➕️",width = "stretch"):
         if st.session_state.messages:
             save_session()
