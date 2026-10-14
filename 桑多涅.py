@@ -304,6 +304,11 @@ def set_background(image_file):
         color: #4A3428 !important;
         border: 1px solid #A9744F !important;
     }}
+    /* popover 里的有序/无序列表序号颜色 */
+    [data-testid="stPopoverBody"] ol li::marker,
+    [data-testid="stPopoverBody"] ul li::marker {{
+        color: #4A3428 !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -391,7 +396,6 @@ with st.sidebar:
         st.write("她外冷内热，毒舌傲娇，珍视与哥伦比娅、阿蕾奇诺等人的茶会情谊。")
         st.write("在博士之战中，她以自身为术式核心牺牲，从被创造的木偶蜕变为拥有自主意志之人。")
 
-    st.divider()
     st.subheader("🔑 API 设置")
 
     with st.popover("📖 使用说明", use_container_width=True):
@@ -417,12 +421,9 @@ with st.sidebar:
 
     if not user_api_key:
         st.warning("请先输入 API Key 才能开始对话")
-        st.stop()
+    else:
+        st.success("API Key 已设置 ✓")
 
-    client = OpenAI(
-        api_key=user_api_key,
-        base_url="https://api.deepseek.com"
-    )
 
     if st.button("开启新对话", icon = "➕️",width = "stretch"):
         if st.session_state.messages:
@@ -466,6 +467,15 @@ for message in st.session_state["messages"]:
         st.chat_message("user", avatar = "resources/旅行者头像.png").write(message["content"])
     else:
         st.chat_message("assistant", avatar = "resources/桑多涅头像1.png").write(message["content"])
+
+if not user_api_key:
+    st.info("👈 请在左侧输入你的 DeepSeek API Key 后开始对话")
+    st.stop()
+
+client = OpenAI(
+    api_key=user_api_key,
+    base_url="https://api.deepseek.com"
+)
 
 prompt = st.bottom.chat_input("请输入...")
 if prompt:
