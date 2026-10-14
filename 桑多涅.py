@@ -42,7 +42,7 @@ def set_background(image_file):
 
     st.markdown(f"""
     <style>
-    /*背景*/
+    /* 背景 */
     .stApp {{
         background-image: 
             linear-gradient(rgba(234, 219, 200, 0.82), 
@@ -54,7 +54,7 @@ def set_background(image_file):
         background-attachment: fixed;
     }}
 
-    /*主题色*/
+    /* 主题色 */
     :root {{
         --primary-color: #A9744F;
         --background-color: #F5EDE4;
@@ -63,11 +63,30 @@ def set_background(image_file):
         --font: "sans-serif";
     }}
 
-    /*侧边栏*/
+    /* 全局文字颜色 */
+    .stApp, .stApp p, .stApp span, .stApp label,
+    .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
+    .stApp li, .stApp div {{
+        color: #4A3428;
+    }}
+
+    /* 顶部 */
+    [data-testid="stHeader"] {{
+        background-color: rgba(0, 0, 0, 0);
+    }}
+
+    /* 正文区域卡片 */
+    .main .block-container {{
+        background-color: rgba(245, 237, 228, 0.55);
+        border-radius: 16px;
+        padding: 2rem 2.5rem;
+        backdrop-filter: blur(2px);
+    }}
+
+    /* ============ 侧边栏 ============ */
     [data-testid="stSidebar"] {{
         background-color: #4A3428;
     }}
-    /*侧边栏文字*/
     [data-testid="stSidebar"] *:not(button):not(button *) {{
         color: #F5EDE4 !important;
     }}
@@ -77,33 +96,7 @@ def set_background(image_file):
         background-color: #F5EDE4 !important;
     }}
 
-    /*底部输入栏*/
-    [data-testid="stBottom"] > div {{
-        background-color: #EADBC8;
-    }}
-    [data-testid="stBottomBlockContainer"] {{
-        background-color: #EADBC8;
-        border-radius: 10px;
-    }}
-    [data-testid="stBottom"] textarea {{
-        background-color: #F5EDE4 !important;
-        color: #4A3428 !important;
-    }}
-
-    /*顶部*/
-    [data-testid="stHeader"] {{
-        background-color: rgba(0, 0, 0, 0);
-    }}
-
-    /*正文区域卡片*/
-    .main .block-container {{
-        background-color: rgba(245, 237, 228, 0.55);
-        border-radius: 16px;
-        padding: 2rem 2.5rem;
-        backdrop-filter: blur(2px);
-    }}
-
-    /*普通按钮*/
+    /* ============ 普通按钮 ============ */
     .stButton > button,
     .stDownloadButton > button {{
         background-color: #EADBC8 !important;
@@ -112,15 +105,11 @@ def set_background(image_file):
         border-radius: 8px !important;
         transition: all 0.2s ease;
     }}
-
-    /*普通按钮内所有子元素*/
     .stButton > button *,
     .stDownloadButton > button * {{
         color: #4A3428 !important;
         fill: #4A3428 !important;
     }}
-
-    /*普通按钮悬停*/
     .stButton > button:hover,
     .stDownloadButton > button:hover {{
         background-color: #A9744F !important;
@@ -132,7 +121,7 @@ def set_background(image_file):
         fill: #F5EDE4 !important;
     }}
 
-    /*主按钮（type="primary"）*/
+    /* ============ 主按钮 ============ */
     .stButton > button[kind="primary"],
     .stDownloadButton > button[kind="primary"],
     .stFormSubmitButton > button {{
@@ -146,8 +135,6 @@ def set_background(image_file):
         color: #F5EDE4 !important;
         fill: #F5EDE4 !important;
     }}
-
-    /*主按钮悬停*/
     .stButton > button[kind="primary"]:hover,
     .stDownloadButton > button[kind="primary"]:hover,
     .stFormSubmitButton > button:hover {{
@@ -155,8 +142,7 @@ def set_background(image_file):
         border-color: #6B4528 !important;
     }}
 
-    /*侧边栏历史记录按钮
-    默认（非当前会话）：tertiary */
+    /* ============ 侧边栏历史记录按钮 ============ */
     [data-testid="stSidebar"] .stButton > button[kind="tertiary"] {{
         background-color: #4A3428 !important;
         color: #F5EDE4 !important;
@@ -166,8 +152,6 @@ def set_background(image_file):
         color: #F5EDE4 !important;
         fill: #F5EDE4 !important;
     }}
-
-    /*默认悬停*/
     [data-testid="stSidebar"] .stButton > button[kind="tertiary"]:hover {{
         background-color: #A9744F !important;
     }}
@@ -176,7 +160,6 @@ def set_background(image_file):
         fill: #F5EDE4 !important;
     }}
 
-    /*当前会话*/
     [data-testid="stSidebar"] .stButton > button[kind="secondary"] {{
         background-color: #EADBC8 !important;
         color: #4A3428 !important;
@@ -186,8 +169,6 @@ def set_background(image_file):
         color: #4A3428 !important;
         fill: #4A3428 !important;
     }}
-
-    /*当前会话悬停*/
     [data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {{
         background-color: #A9744F !important;
     }}
@@ -195,15 +176,8 @@ def set_background(image_file):
         color: #F5EDE4 !important;
         fill: #F5EDE4 !important;
     }}
-    
-    /*全局文字颜色*/
-    .stApp, .stApp p, .stApp span, .stApp label,
-    .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
-    .stApp li, .stApp div {{
-        color: #4A3428;
-    }}
 
-    /*音频播放器*/
+    /* ============ 音频播放器 ============ */
     audio {{
         background-color: #EADBC8;
         border-radius: 10px;
@@ -217,7 +191,7 @@ def set_background(image_file):
         padding: 6px 10px;
     }}
 
-    /*弹窗 1：st.dialog */
+    /* ============ st.dialog 弹窗 ============ */
     [data-testid="stModal"] > div:first-child,
     div[data-baseweb="modal"] {{
         background-color: rgba(74, 52, 40, 0.5) !important;
@@ -251,12 +225,7 @@ def set_background(image_file):
         border-radius: 50%;
     }}
 
-    /*弹窗 2：st.popover 弹出层*/
-    [data-testid="stPopover"] {{
-        background-color: transparent;
-    }}
-
-    /* popover 触发按钮：强制浅棕底 + 深棕字（含侧边栏内）*/
+    /* ============ popover 触发按钮 ============ */
     div[data-testid="stPopover"] button,
     [data-testid="stSidebar"] div[data-testid="stPopover"] button {{
         background-color: #EADBC8 !important;
@@ -270,8 +239,6 @@ def set_background(image_file):
         color: #4A3428 !important;
         fill: #4A3428 !important;
     }}
-
-    /*popover 按钮悬停*/
     div[data-testid="stPopover"] button:hover,
     [data-testid="stSidebar"] div[data-testid="stPopover"] button:hover {{
         background-color: #A9744F !important;
@@ -283,86 +250,95 @@ def set_background(image_file):
         fill: #F5EDE4 !important;
     }}
 
-    /*popover 弹出的内容框*/
+    /* ============ popover 内容区 ============ */
     [data-testid="stPopoverBody"] {{
         background-color: #F5EDE4 !important;
         border: 2px solid #A9744F !important;
         border-radius: 12px !important;
         box-shadow: 0 6px 24px rgba(74, 52, 40, 0.3) !important;
     }}
+    /* 用 * 通配打中所有后代，强制深棕 */
+    [data-testid="stPopoverBody"] *,
     [data-testid="stPopoverBody"] p,
-    [data-testid="stPopoverBody"] label,
     [data-testid="stPopoverBody"] span,
+    [data-testid="stPopoverBody"] li,
+    [data-testid="stPopoverBody"] strong,
     [data-testid="stPopoverBody"] h1,
     [data-testid="stPopoverBody"] h2,
     [data-testid="stPopoverBody"] h3 {{
         color: #4A3428 !important;
+        -webkit-text-fill-color: #4A3428 !important;
+        opacity: 1 !important;
     }}
+    /* 链接 */
+    [data-testid="stPopoverBody"] a {{
+        color: #A9744F !important;
+        -webkit-text-fill-color: #A9744F !important;
+        text-decoration: underline !important;
+    }}
+    /* 序号 */
+    [data-testid="stPopoverBody"] ol li::marker,
+    [data-testid="stPopoverBody"] ul li::marker {{
+        color: #4A3428 !important;
+        -webkit-text-fill-color: #4A3428 !important;
+    }}
+    /* code 块 */
+    [data-testid="stPopoverBody"] code {{
+        background-color: #EADBC8 !important;
+        color: #4A3428 !important;
+        -webkit-text-fill-color: #4A3428 !important;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }}
+    /* popover 里的输入框 */
     [data-testid="stPopoverBody"] input,
     [data-testid="stPopoverBody"] textarea {{
         background-color: #FFFFFF !important;
         color: #4A3428 !important;
         border: 1px solid #A9744F !important;
     }}
-    /* popover 里的有序/无序列表序号颜色 */
-    [data-testid="stPopoverBody"] ol li::marker,
-    [data-testid="stPopoverBody"] ul li::marker {{
-        color: #4A3428 !important;
-    }}
-       [data-testid="stPopoverBody"] input,
-    [data-testid="stPopoverBody"] textarea {{
-        background-color: #FFFFFF !important;
-        color: #4A3428 !important;
-        border: 1px solid #A9744F !important;
-    }}
 
-    /* popover 里的有序/无序列表序号颜色 */
-    [data-testid="stPopoverBody"] ol li::marker,
-    [data-testid="stPopoverBody"] ul li::marker {{
-        color: #4A3428 !important;
-    }}
-
-    /* 聊天消息：用户气泡——浅棕半透明 */
-    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {{
-        background-color: rgba(169, 116, 79, 0.22) !important;
-        border-radius: 12px !important;
-        padding: 10px !important;
-    }}
-
-    /* 聊天消息：AI 气泡——更浅的米色 */
-    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {{
-        background-color: rgba(234, 219, 200, 0.45) !important;
-        border-radius: 12px !important;
-        padding: 10px !important;
-    }}
-
-    /* 聊天消息里的所有文字强制深棕 */
-    [data-testid="stChatMessage"] p,
-    [data-testid="stChatMessage"] span,
-    [data-testid="stChatMessage"] div,
-    [data-testid="stChatMessage"] label {{
-        color: #4A3428 !important;
-    }}
-        /* 所有聊天消息统一改色 */
+    /* ============ 聊天消息 ============ */
+    /* 所有消息统一浅米色底 + 圆角 */
     [data-testid="stChatMessage"] {{
         background-color: rgba(234, 219, 200, 0.55) !important;
         border-radius: 12px !important;
-        padding: 10px !important;
+        padding: 12px !important;
     }}
-
-    /* 消息里所有文字强制深棕，包括嵌套的 markdown 容器 */
+    /* 用户消息：更明显的浅棕底 */
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {{
+        background-color: rgba(169, 116, 79, 0.28) !important;
+    }}
+    /* 消息内所有文字强制深棕 */
     [data-testid="stChatMessage"] *,
     [data-testid="stChatMessage"] p,
     [data-testid="stChatMessage"] span,
-    [data-testid="stChatMessage"] div {{
-        color: #4A3428 !important;
-    }}
-
-    /* 深色模式下也强制覆盖（防止 Streamlit 主题干扰） */
-    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] div,
     [data-testid="stChatMessage"] li {{
         color: #4A3428 !important;
         -webkit-text-fill-color: #4A3428 !important;
+    }}
+
+    /* ============ 底部聊天输入框 ============ */
+    [data-testid="stBottom"] > div,
+    [data-testid="stBottomBlockContainer"] {{
+        background-color: #EADBC8 !important;
+        border-radius: 10px !important;
+    }}
+    [data-testid="stChatInput"] {{
+        background-color: #F5EDE4 !important;
+        border-radius: 10px !important;
+    }}
+    [data-testid="stChatInputTextArea"] {{
+        color: #4A3428 !important;
+        -webkit-text-fill-color: #4A3428 !important;
+        background-color: #F5EDE4 !important;
+        caret-color: #4A3428 !important;
+    }}
+    [data-testid="stChatInputTextArea"]::placeholder {{
+        color: #A9744F !important;
+        -webkit-text-fill-color: #A9744F !important;
+        opacity: 1 !important;
     }}
     </style>
     """, unsafe_allow_html=True)
