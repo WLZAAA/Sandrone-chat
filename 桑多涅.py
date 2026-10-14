@@ -84,13 +84,14 @@ def set_background(image_file):
     }}
 
     /* ============ 侧边栏 ============ */
-            /* 侧边栏 API Key 输入框（含 focus 状态） */
-    [data-testid="stSidebar"] input[type="password"],
-    [data-testid="stSidebar"] input[type="text"],
-    [data-testid="stSidebar"] input[type="password"]:focus,
-    [data-testid="stSidebar"] input[type="text"]:focus,
-    [data-testid="stSidebar"] input[type="password"]:active,
-    [data-testid="stSidebar"] input[type="text"]:active {{
+                /* 侧边栏 API Key 输入框 —— 所有状态都保持深棕 */
+    [data-testid="stSidebar"] [data-testid="stTextInput"] > div,
+    [data-testid="stSidebar"] [data-testid="stTextInput"] > div > div,
+    [data-testid="stSidebar"] [data-testid="stTextInput"] input,
+    [data-testid="stSidebar"] [data-testid="stTextInput"] input:focus,
+    [data-testid="stSidebar"] [data-testid="stTextInput"] input:active,
+    [data-testid="stSidebar"] [data-baseweb="input"],
+    [data-testid="stSidebar"] [data-baseweb="base-input"] {{
         background-color: #4A3428 !important;
         color: #F5EDE4 !important;
         -webkit-text-fill-color: #F5EDE4 !important;
@@ -100,19 +101,17 @@ def set_background(image_file):
         outline: none !important;
     }}
 
-    /* 输入框外层容器也不要变蓝 */
-    [data-testid="stSidebar"] [data-baseweb="input"],
-    [data-testid="stSidebar"] [data-baseweb="base-input"] {{
-        background-color: #4A3428 !important;
-        border-color: #A9744F !important;
-        border-radius: 8px !important;
-    }}
-
     /* 眼睛图标 SVG 强制浅色 */
-    [data-testid="stSidebar"] input[type="password"] ~ div svg,
+    [data-testid="stSidebar"] [data-testid="stTextInput"] button svg,
     [data-testid="stSidebar"] [data-baseweb="input"] button svg {{
         fill: #F5EDE4 !important;
         color: #F5EDE4 !important;
+    }}
+
+    /* 自动验证结果的小字 */
+    [data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {{
+        color: #F5EDE4 !important;
+        -webkit-text-fill-color: #F5EDE4 !important;
     }}
 
     /* 侧边栏成功/警告提示 —— 改成内联小标签 */
@@ -543,42 +542,44 @@ with st.sidebar:
         ⚠️ 你的 Key 只用于本次会话，不会被保存
         """)
 
-    user_api_key = st.text_input(
-        "请输入你的 DeepSeek API Key",
-        type="password",
-        placeholder="sk-...",
-        help="Key 仅用于当前会话，不会保存"
-    )
-
-    # 用 session_state 记住验证是否通过
+    # session_state 记录验证结果
     if "api_key_valid" not in st.session_state:
         st.session_state.api_key_valid = False
+    if "verified_key" not in st.session_state:
+        st.session_state.verified_key = ""
 
-    if user_api_key:
-        if st.button("验证 Key", use_container_width=True, key="verify_key"):
-            try:
-                test_client = OpenAI(
-                    api_key=user_api_key,
-                    base_url="https://api.deepseek.com"
-                )
-                test_client.chat.completions.create(
-                    model="deepseek-flash",
-                    messages=[{"role": "user", "content": "hi"}],
-                    max_tokens=1
-                )
-                st.session_state.api_key_valid = True
-                st.session_state.verified_key = user_api_key
-                st.caption("✓ Key 验证通过")
-            except Exception:
-                st.session_state.api_key_valid = False
-                st.caption("✗ Key 无效，请检查后重试")
+    user_api_key = st.text_input(
+        "请输入你的 DeepSeek API Key（输入后按回车验证）",
+        type="password",
+        placeholder="sk-...",
+        key="api_key_input"
+    )
 
-        if st.session_state.api_key_valid and st.session_state.get("verified_key") == user_api_key:
-            st.caption("✓ API Key 已设置")
-        elif not st.session_state.api_key_valid:
-            st.caption("⚠ 请点击上方按钮验证 Key")
+    # 自动验证：key 变了就重新验一次
+    if user_api_key and user_api_key != st.session_state.verified_key:
+        try:
+            test_client = OpenAI(
+                api_key=user_api_key,
+                base_url="https://api.deepseek.com"
+            )
+            test_client.chat.completions.create(
+                model="deepseek-flash",
+                messages=[{"role": "user", "content": "hi"}],
+                max_tokens=1
+            )
+            st.session_state.api_key_valid = True
+            st.session_state.verified_key = user_api_key
+        except Exception:
+            st.session_state.api_key_valid = False
+            st.session_state.verified_key = ""
+
+    # 状态提示（一行小字）
+    if not user_api_key:
+        st.caption("⚠ 请输入 API Key")
+    elif st.session_state.api_key_valid and st.session_state.verified_key == user_api_key:
+        st.caption("✓ Key 验证通过")
     else:
-        st.caption("⚠ 请先输入 API Key")
+        st.caption("✗ Key 无效，请检查后重试")
 
 
     if st.button("开启新对话", icon = "➕️",width = "stretch"):
@@ -625,7 +626,7 @@ for message in st.session_state["messages"]:
         st.chat_message("assistant", avatar = "resources/桑多涅头像1.png").write(message["content"])
 
 if not user_api_key or not st.session_state.get("api_key_valid") or st.session_state.get("verified_key") != user_api_key:
-    st.info("👈 请在左侧输入你的 DeepSeek API Key，并点击「验证 Key」通过后开始对话")
+    st.info("👈 请在左侧输入你的 DeepSeek API Key 后开始对话")
     st.stop()
 
 client = OpenAI(
