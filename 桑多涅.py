@@ -1,8 +1,6 @@
 import streamlit as st
-import os
 from openai import OpenAI
 import datetime
-import json
 
 system_prompt = """ 你是一名很有格调的淑女，你隶属于愚人众十一执行官第七席，称号「木偶」，
                     出身枫丹，是由「奇械公」阿兰·吉约丹为纪念亡妹玛丽安而创造的机械生命。
@@ -460,65 +458,41 @@ st.set_page_config(
     menu_items = {}
 )
 
-def save_session():
-    if st.session_state.current_session:
-        session_data = {
-            "current_session": st.session_state.current_session,
-            "messages": st.session_state.messages
-        }
-
-        if not os.path.exists("sessions"):
-            os.mkdir("sessions")
-
-        with open(f'sessions/{st.session_state.current_session}.json', "w", encoding="utf-8") as f:
-            json.dump(session_data, f, ensure_ascii=False, indent=4)
-
 def generate_session_name():
-    return datetime.datetime.now().strftime("%Y-%m-%d__%H-%M-%S")
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-def load_sessions():
-    session_list = []
-    if os.path.exists("sessions"):
-        file_list = os.listdir("sessions")
-        for file in file_list:
-            if file.endswith(".json"):
-                session_list.append(file[:-5])
-    return session_list
+# 初始化：历史记录和当前对话都存 session_state
+if "sessions" not in st.session_state:
+    st.session_state.sessions = {}   # {会话名: [消息列表]}
+if "current_session" not in st.session_state:
+    st.session_state.current_session = generate_session_name()
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-def load_session(session_name):
-    try:
-        if os.path.exists(f"sessions/{session_name}.json"):
-            with open(f'sessions/{session_name}.json', "r", encoding="utf-8") as f:
-                session_data = json.load(f)
-                st.session_state.messages = session_data["messages"]
-                st.session_state.current_session = session_data["current_session"]
-    except Exception as e:
-        st.error("加载会话失败！")
+def save_session():
+    """把当前对话存进 session_state 的历史里"""
+    if st.session_state.messages:
+        st.session_state.sessions[st.session_state.current_session] = list(st.session_state.messages)
 
 def delete(session_name):
-    try:
-        if os.path.exists(f"sessions/{session_name}.json"):
-            os.remove(f"sessions/{session_name}.json")
-            if session_name == st.session_state.current_session:
-                st.session_state.messages = []
-                st.session_state.current_session = generate_session_name()
-    except Exception:
-        st.error("删除会话失败")
+    """删除某个历史会话"""
+    if session_name in st.session_state.sessions:
+        del st.session_state.sessions[session_name]
+    if session_name == st.session_state.current_session:
+        st.session_state.messages = []
+        st.session_state.current_session = generate_session_name()
 
 @st.dialog("是否确认删除")
 def confirm_delete(session_name):
     st.write("删除后，该对话将不可恢复")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("取消", width = "stretch"):
+        if st.button("取消", width="stretch"):
             st.rerun()
     with col2:
-        if st.button("确认删除", type = "primary", width = "stretch"):
+        if st.button("确认删除", type="primary", width="stretch"):
             delete(session_name)
             st.rerun()
-
-if "current_session" not in st.session_state:
-    st.session_state["current_session"] = generate_session_name()
 
 with st.sidebar:
     st.image("resources/木偶.jpg", width=1600)
@@ -582,40 +556,38 @@ with st.sidebar:
     else:
         st.caption("✗ Key 无效，请检查后重试")
 
-
-    if st.button("开启新对话", icon = "➕️",width = "stretch"):
-        if st.session_state.messages:
-            save_session()
-            st.session_state.messages = []
-            st.session_state.current_session = generate_session_name()
-            save_session()
-            st.rerun()
+    if st.button("开启新对话", icon="➕️", width="stretch"):
+        save_session()
+        st.session_state.messages = []
+        st.session_state.current_session = generate_session_name()
+        st.rerun()
 
     st.text("历史")
-    session_list = load_sessions()
-    for session in reversed(session_list):
+    session_names = list(st.session_state.sessions.keys())
+    for session in reversed(session_names):
         left, right = st.columns([4, 1])
         with left:
-            try:
-                if os.path.exists(f"sessions/{session}.json"):
-                    with open(f'sessions/{session}.json', "r", encoding="utf-8") as f:
-                        session_data = json.load(f)
-                        this_name = session_data["messages"][0]["content"]
-            except Exception as e:
-                this_name = "新对话"
-            if st.button(this_name, width = "stretch", key = f"load_{session}", type = "secondary"if session == st.session_state.current_session else "tertiary"):
-                load_session(session)
+            msgs = st.session_state.sessions.get(session, [])
+            this_name = msgs[0]["content"] if msgs else "新对话"
+            if st.button(
+                    this_name,
+                    width="stretch",
+                    key=f"load_{session}",
+                    type="secondary" if session == st.session_state.current_session else "tertiary"
+            ):
+                save_session()
+                st.session_state.current_session = session
+                st.session_state.messages = list(st.session_state.sessions[session])
                 st.rerun()
         with right:
-            if st.button("", icon = "❌️",width = "stretch",  key = f"delete_{session}", type = "tertiary"):
+            if st.button("", icon="❌️", width="stretch", key=f"delete_{session}", type="tertiary"):
                 confirm_delete(session)
 
 
 
 st.logo("resources/桑多涅头像1.png", size = "large")
 st.subheader("桑多涅")
-if "messages" not in st.session_state:
-    st.session_state["messages"] = []
+
 if st.session_state["messages"] == []:
 
     st.write("初次见面...")
@@ -663,5 +635,4 @@ if prompt:
             full_response += content
             response_message.chat_message("assistant", avatar="resources/桑多涅头像1.png").write(full_response)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
-    save_session()
     st.rerun()
