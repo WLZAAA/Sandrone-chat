@@ -319,32 +319,37 @@ def set_background(image_file):
         -webkit-text-fill-color: #4A3428 !important;
     }}
 
-        /* ============ 底部聊天输入框 ============ */
-    /* 最外层：去掉深蓝底，改成浅棕 */
+    /* ============ 底部聊天输入框 ============ */
+    /* 外层容器：只设背景透明，不加边框 */
+    [data-testid="stBottom"],
     [data-testid="stBottom"] > div,
     [data-testid="stBottomBlockContainer"] {{
-        background-color: #F5EDE4 !important;
-        border: 2px solid #4A3428 !important;
-        border-radius: 14px !important;
+        background-color: transparent !important;
+        border: none !important;
         box-shadow: none !important;
     }}
 
-    /* 内层容器：同样浅棕，避免深蓝漏出来 */
-    [data-testid="stBottomBlockContainer"] > div,
-    [data-testid="stBottom"] .stChatInput {{
-        background-color: #F5EDE4 !important;
-        border-radius: 12px !important;
-    }}
-
-    /* 输入框本体 */
+    /* 真正的输入框容器：加边框、圆角、浅棕底 */
     [data-testid="stChatInput"] {{
         background-color: #F5EDE4 !important;
+        border: 2px solid #4A3428 !important;
         border-radius: 12px !important;
+        box-shadow: none !important;
     }}
+
+    /* 输入区内部不要再套底色和边框 */
+    [data-testid="stChatInput"] > div,
+    [data-testid="stChatInput"] > div > div {{
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }}
+
+    /* 输入文字 */
     [data-testid="stChatInputTextArea"] {{
         color: #4A3428 !important;
         -webkit-text-fill-color: #4A3428 !important;
-        background-color: #F5EDE4 !important;
+        background-color: transparent !important;
         caret-color: #4A3428 !important;
     }}
     [data-testid="stChatInputTextArea"]::placeholder {{
@@ -353,7 +358,7 @@ def set_background(image_file):
         opacity: 1 !important;
     }}
 
-    /* 发送按钮（纸飞机）也换成棕色系 */
+    /* 发送按钮 */
     [data-testid="stChatInput"] button {{
         background-color: #EADBC8 !important;
         border: 1px solid #A9744F !important;
