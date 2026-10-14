@@ -343,6 +343,27 @@ def set_background(image_file):
     [data-testid="stChatMessage"] label {{
         color: #4A3428 !important;
     }}
+        /* 所有聊天消息统一改色 */
+    [data-testid="stChatMessage"] {{
+        background-color: rgba(234, 219, 200, 0.55) !important;
+        border-radius: 12px !important;
+        padding: 10px !important;
+    }}
+
+    /* 消息里所有文字强制深棕，包括嵌套的 markdown 容器 */
+    [data-testid="stChatMessage"] *,
+    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] span,
+    [data-testid="stChatMessage"] div {{
+        color: #4A3428 !important;
+    }}
+
+    /* 深色模式下也强制覆盖（防止 Streamlit 主题干扰） */
+    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] li {{
+        color: #4A3428 !important;
+        -webkit-text-fill-color: #4A3428 !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
