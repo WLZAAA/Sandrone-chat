@@ -84,6 +84,32 @@ def set_background(image_file):
     }}
 
     /* ============ 侧边栏 ============ */
+        /* 侧边栏 API Key 输入框 */
+    [data-testid="stSidebar"] input[type="password"],
+    [data-testid="stSidebar"] input[type="text"] {{
+        background-color: #4A3428 !important;
+        color: #F5EDE4 !important;
+        -webkit-text-fill-color: #F5EDE4 !important;
+        border: 1px solid #A9744F !important;
+        border-radius: 8px !important;
+    }}
+
+    /* 侧边栏成功/警告提示 —— 改成内联小标签 */
+    [data-testid="stSidebar"] [data-testid="stAlert"] {{
+        background-color: transparent !important;
+        border: none !important;
+        padding: 4px 0 !important;
+        margin: 0 !important;
+        min-height: 0 !important;
+    }}
+    [data-testid="stSidebar"] [data-testid="stAlert"] p {{
+        color: #F5EDE4 !important;
+        font-size: 0.85rem !important;
+        margin: 0 !important;
+    }}
+    [data-testid="stSidebar"] [data-testid="stAlert"] svg {{
+        display: none !important;
+    }}
     [data-testid="stSidebar"] {{
         background-color: #4A3428;
     }}
@@ -485,10 +511,10 @@ with st.sidebar:
         help="Key 仅用于当前会话，不会保存"
     )
 
-    if not user_api_key:
-        st.warning("请先输入 API Key 才能开始对话")
+    if user_api_key:
+        st.caption("✓ API Key 已设置")
     else:
-        st.success("API Key 已设置 ✓")
+        st.caption("⚠ 请先输入 API Key 才能开始对话")
 
 
     if st.button("开启新对话", icon = "➕️",width = "stretch"):
