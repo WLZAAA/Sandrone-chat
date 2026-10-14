@@ -309,6 +309,40 @@ def set_background(image_file):
     [data-testid="stPopoverBody"] ul li::marker {{
         color: #4A3428 !important;
     }}
+       [data-testid="stPopoverBody"] input,
+    [data-testid="stPopoverBody"] textarea {{
+        background-color: #FFFFFF !important;
+        color: #4A3428 !important;
+        border: 1px solid #A9744F !important;
+    }}
+
+    /* popover 里的有序/无序列表序号颜色 */
+    [data-testid="stPopoverBody"] ol li::marker,
+    [data-testid="stPopoverBody"] ul li::marker {{
+        color: #4A3428 !important;
+    }}
+
+    /* 聊天消息：用户气泡——浅棕半透明 */
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {{
+        background-color: rgba(169, 116, 79, 0.22) !important;
+        border-radius: 12px !important;
+        padding: 10px !important;
+    }}
+
+    /* 聊天消息：AI 气泡——更浅的米色 */
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {{
+        background-color: rgba(234, 219, 200, 0.45) !important;
+        border-radius: 12px !important;
+        padding: 10px !important;
+    }}
+
+    /* 聊天消息里的所有文字强制深棕 */
+    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] span,
+    [data-testid="stChatMessage"] div,
+    [data-testid="stChatMessage"] label {{
+        color: #4A3428 !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
