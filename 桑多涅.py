@@ -635,4 +635,5 @@ if prompt:
             full_response += content
             response_message.chat_message("assistant", avatar="resources/桑多涅头像1.png").write(full_response)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
+    save_session()
     st.rerun()
